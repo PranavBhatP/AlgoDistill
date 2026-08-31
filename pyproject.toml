@@ -1,0 +1,35 @@
+[project]
+name = "qlora-code-distillation"
+version = "0.1.0"
+description = "QLoRA Distillation for Algorithmic Code Classification and Generation"
+authors = [{ name = "Pranav Bhat P", email = "231it049@nitk.edu.in" }]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "torch>=2.2.0",
+    "transformers>=4.40.0",
+    "peft>=0.10.0",
+    "accelerate>=0.29.0",
+    "bitsandbytes>=0.43.0",
+    "datasets>=2.18.0",
+    "scikit-learn>=1.4.0",
+    "requests>=2.31.0",
+    "beautifulsoup4>=4.12.0",
+    "google-genai>=0.1.0",
+    "numpy>=1.26.0",
+    "pandas>=2.2.0",
+    "matplotlib>=3.8.0",
+    "seaborn>=0.13.0",
+    "tqdm>=4.66.0",
+    "rich>=13.7.0",
+    "pyyaml>=6.0.1",
+    "pytest>=8.0.0",
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

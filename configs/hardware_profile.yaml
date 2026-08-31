@@ -1,0 +1,34 @@
+# Hardware Profiles for Consumer GPU (6GB RTX 3050 Laptop) & Cloud Environments
+profiles:
+  rtx3050_6gb:
+    device: "cuda:0"
+    vram_gb: 6.0
+    dtype: "bfloat16"
+    gradient_checkpointing: true
+    paged_adamw: true
+    max_batch_size_stage1: 4
+    max_batch_size_stage2: 2
+    grad_accum_stage1: 4
+    grad_accum_stage2: 8
+    target_vram_usage_gb: 4.8
+
+  colab_t4_15gb:
+    device: "cuda:0"
+    vram_gb: 15.0
+    dtype: "float16"
+    gradient_checkpointing: true
+    paged_adamw: false
+    max_batch_size_stage1: 8
+    max_batch_size_stage2: 4
+    grad_accum_stage1: 2
+    grad_accum_stage2: 4
+
+  cpu_fallback:
+    device: "cpu"
+    dtype: "float32"
+    gradient_checkpointing: false
+    paged_adamw: false
+    max_batch_size_stage1: 2
+    max_batch_size_stage2: 1
+    grad_accum_stage1: 8
+    grad_accum_stage2: 16

@@ -204,6 +204,53 @@
   \end{block}
 \end{frame}
 
+% Slide 7: Individual Contributions
+\begin{frame}{Individual Contributions}
+  \begin{columns}[T]
+    \begin{column}{0.32\textwidth}
+      \begin{block}{\textbf{Himanshu Mehar}\\[1pt]\scriptsize Roll No: 231IT027}
+        \textbf{Execution Sandbox Judge}
+        \vspace{3pt}
+        \begin{itemize}\itemsep=2.5pt\footnotesize
+          \item Subprocess-isolated evaluation environment (\texttt{sandbox\_judge.py}).
+          \item POSIX memory bounding via \texttt{RLIMIT\_AS} ($512\,\text{MB}$).
+          \item Execution timeout containment ($2.0\,\text{s}$ CPU cutoff).
+          \item Automated verdict parsing (\textbf{AC}, \textbf{WA}, \textbf{TLE}, \textbf{RE}, \textbf{CE}).
+          \item Robust sandboxing for competitive programming test suites.
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.32\textwidth}
+      \begin{block}{\textbf{Shivam Kumar}\\[1pt]\scriptsize Roll No: 231IT068}
+        \textbf{Rationale Filter \& Traces}
+        \vspace{3pt}
+        \begin{itemize}\itemsep=2.5pt\footnotesize
+          \item Gemini 3.5 Flash Lite API integration for teacher generation.
+          \item Rationale-consistency semantic filter (\texttt{rationale\_filter.py}).
+          \item Keyword taxonomy matching \& contradiction pruning.
+          \item Length deficiency and quality validation ($82\%$ yield).
+          \item Curated purified dataset across 10 algorithmic categories.
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.32\textwidth}
+      \begin{block}{\textbf{Pranav Bhat P}\\[1pt]\scriptsize Roll No: 231IT049}
+        \textbf{QLoRA Pipelines \& Evaluation}
+        \vspace{3pt}
+        \begin{itemize}\itemsep=2.5pt\footnotesize
+          \item Dual QLoRA pipelines: HF PEFT (\texttt{NF4}) vs. Unsloth Triton.
+          \item Stage 1 Classifier architecture on \texttt{Qwen2.5-0.5B}.
+          \item Comprehensive evaluation suite: Top-1/3 Acc, Macro-F1, matrices.
+          \item Empirical GPU benchmarking ($3.0\times$ speedup, $<1\,\text{GB}$ VRAM).
+          \item End-to-end pipeline coordination and Colab environments.
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
 \begin{frame}{Quality Assurance: Rationale Filter \& Sandbox Judge}
   \begin{columns}[T]
     \begin{column}{0.5\textwidth}

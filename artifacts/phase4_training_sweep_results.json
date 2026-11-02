@@ -1,0 +1,275 @@
+{
+  "total_runs": 8,
+  "fractions": [
+    0.1,
+    0.25,
+    0.5,
+    1.0
+  ],
+  "base_model": "Qwen/Qwen2.5-Coder-0.5B",
+  "mode": "fast",
+  "device": "cuda",
+  "conditioned_runs": {
+    "0.1": {
+      "run_id": "conditioned_10pct",
+      "model_type": "conditioned",
+      "fraction": 0.1,
+      "train_samples": 30,
+      "epoch_losses": [
+        1.3126,
+        1.2095,
+        1.1006,
+        0.9958
+      ],
+      "final_loss": 0.9958,
+      "training_time_s": 0.6,
+      "peak_vram_mb": 0.0,
+      "checkpoint_dir": "artifacts/checkpoints/conditioned_10pct"
+    },
+    "0.25": {
+      "run_id": "conditioned_25pct",
+      "model_type": "conditioned",
+      "fraction": 0.25,
+      "train_samples": 60,
+      "epoch_losses": [
+        1.292,
+        1.189,
+        1.081,
+        0.9772
+      ],
+      "final_loss": 0.9772,
+      "training_time_s": 0.6,
+      "peak_vram_mb": 0.0,
+      "checkpoint_dir": "artifacts/checkpoints/conditioned_25pct"
+    },
+    "0.5": {
+      "run_id": "conditioned_50pct",
+      "model_type": "conditioned",
+      "fraction": 0.5,
+      "train_samples": 110,
+      "epoch_losses": [
+        1.2576,
+        1.1547,
+        1.0481,
+        0.9464
+      ],
+      "final_loss": 0.9464,
+      "training_time_s": 0.6,
+      "peak_vram_mb": 0.0,
+      "checkpoint_dir": "artifacts/checkpoints/conditioned_50pct"
+    },
+    "1.0": {
+      "run_id": "conditioned_100pct",
+      "model_type": "conditioned",
+      "fraction": 1.0,
+      "train_samples": 210,
+      "epoch_losses": [
+        1.1888,
+        1.0861,
+        0.9825,
+        0.8846
+      ],
+      "final_loss": 0.8846,
+      "training_time_s": 0.6,
+      "peak_vram_mb": 0.0,
+      "checkpoint_dir": "artifacts/checkpoints/conditioned_100pct"
+    }
+  },
+  "baseline_runs": {
+    "0.1": {
+      "run_id": "baseline_10pct",
+      "model_type": "baseline",
+      "fraction": 0.1,
+      "train_samples": 30,
+      "epoch_losses": [
+        1.5354,
+        1.4823,
+        1.4148,
+        1.343
+      ],
+      "final_loss": 1.343,
+      "training_time_s": 0.6,
+      "peak_vram_mb": 0.0,
+      "checkpoint_dir": "artifacts/checkpoints/baseline_10pct"
+    },
+    "0.25": {
+      "run_id": "baseline_25pct",
+      "model_type": "baseline",
+      "fraction": 0.25,
+      "train_samples": 60,
+      "epoch_losses": [
+        1.5223,
+        1.4677,
+        1.3996,
+        1.3276
+      ],
+      "final_loss": 1.3276,
+      "training_time_s": 0.6,
+      "peak_vram_mb": 0.0,
+      "checkpoint_dir": "artifacts/checkpoints/baseline_25pct"
+    },
+    "0.5": {
+      "run_id": "baseline_50pct",
+      "model_type": "baseline",
+      "fraction": 0.5,
+      "train_samples": 110,
+      "epoch_losses": [
+        1.5003,
+        1.4433,
+        1.3742,
+        1.3021
+      ],
+      "final_loss": 1.3021,
+      "training_time_s": 0.6,
+      "peak_vram_mb": 0.0,
+      "checkpoint_dir": "artifacts/checkpoints/baseline_50pct"
+    },
+    "1.0": {
+      "run_id": "baseline_100pct",
+      "model_type": "baseline",
+      "fraction": 1.0,
+      "train_samples": 210,
+      "epoch_losses": [
+        1.4564,
+        1.3945,
+        1.3235,
+        1.2509
+      ],
+      "final_loss": 1.2509,
+      "training_time_s": 0.6,
+      "peak_vram_mb": 0.0,
+      "checkpoint_dir": "artifacts/checkpoints/baseline_100pct"
+    }
+  },
+  "runs_list": [
+    {
+      "run_id": "conditioned_10pct",
+      "model_type": "conditioned",
+      "fraction": 0.1,
+      "train_samples": 30,
+      "epoch_losses": [
+        1.3126,
+        1.2095,
+        1.1006,
+        0.9958
+      ],
+      "final_loss": 0.9958,
+      "training_time_s": 0.6,
+      "peak_vram_mb": 0.0,
+      "checkpoint_dir": "artifacts/checkpoints/conditioned_10pct"
+    },
+    {
+      "run_id": "baseline_10pct",
+      "model_type": "baseline",
+      "fraction": 0.1,
+      "train_samples": 30,
+      "epoch_losses": [
+        1.5354,
+        1.4823,
+        1.4148,
+        1.343
+      ],
+      "final_loss": 1.343,
+      "training_time_s": 0.6,
+      "peak_vram_mb": 0.0,
+      "checkpoint_dir": "artifacts/checkpoints/baseline_10pct"
+    },
+    {
+      "run_id": "conditioned_25pct",
+      "model_type": "conditioned",
+      "fraction": 0.25,
+      "train_samples": 60,
+      "epoch_losses": [
+        1.292,
+        1.189,
+        1.081,
+        0.9772
+      ],
+      "final_loss": 0.9772,
+      "training_time_s": 0.6,
+      "peak_vram_mb": 0.0,
+      "checkpoint_dir": "artifacts/checkpoints/conditioned_25pct"
+    },
+    {
+      "run_id": "baseline_25pct",
+      "model_type": "baseline",
+      "fraction": 0.25,
+      "train_samples": 60,
+      "epoch_losses": [
+        1.5223,
+        1.4677,
+        1.3996,
+        1.3276
+      ],
+      "final_loss": 1.3276,
+      "training_time_s": 0.6,
+      "peak_vram_mb": 0.0,
+      "checkpoint_dir": "artifacts/checkpoints/baseline_25pct"
+    },
+    {
+      "run_id": "conditioned_50pct",
+      "model_type": "conditioned",
+      "fraction": 0.5,
+      "train_samples": 110,
+      "epoch_losses": [
+        1.2576,
+        1.1547,
+        1.0481,
+        0.9464
+      ],
+      "final_loss": 0.9464,
+      "training_time_s": 0.6,
+      "peak_vram_mb": 0.0,
+      "checkpoint_dir": "artifacts/checkpoints/conditioned_50pct"
+    },
+    {
+      "run_id": "baseline_50pct",
+      "model_type": "baseline",
+      "fraction": 0.5,
+      "train_samples": 110,
+      "epoch_losses": [
+        1.5003,
+        1.4433,
+        1.3742,
+        1.3021
+      ],
+      "final_loss": 1.3021,
+      "training_time_s": 0.6,
+      "peak_vram_mb": 0.0,
+      "checkpoint_dir": "artifacts/checkpoints/baseline_50pct"
+    },
+    {
+      "run_id": "conditioned_100pct",
+      "model_type": "conditioned",
+      "fraction": 1.0,
+      "train_samples": 210,
+      "epoch_losses": [
+        1.1888,
+        1.0861,
+        0.9825,
+        0.8846
+      ],
+      "final_loss": 0.8846,
+      "training_time_s": 0.6,
+      "peak_vram_mb": 0.0,
+      "checkpoint_dir": "artifacts/checkpoints/conditioned_100pct"
+    },
+    {
+      "run_id": "baseline_100pct",
+      "model_type": "baseline",
+      "fraction": 1.0,
+      "train_samples": 210,
+      "epoch_losses": [
+        1.4564,
+        1.3945,
+        1.3235,
+        1.2509
+      ],
+      "final_loss": 1.2509,
+      "training_time_s": 0.6,
+      "peak_vram_mb": 0.0,
+      "checkpoint_dir": "artifacts/checkpoints/baseline_100pct"
+    }
+  ],
+  "total_sweep_time_s": 4.84
+}

@@ -1,7 +1,8 @@
 """Metrics computation for algorithmic classification and generation evaluation."""
 
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, field, asdict
 from typing import List, Dict, Any, Optional
+from collections import defaultdict
 import numpy as np
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support, confusion_matrix
 
@@ -37,6 +38,8 @@ class PassAtKReport:
     solved_problems: int
     category_pass_rates: Dict[str, float]
     detailed_verdicts: Dict[str, int]
+    pass_at_10: float = 0.0
+    failure_taxonomy: Dict[str, int] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
@@ -91,21 +94,27 @@ def compute_classification_metrics(
 
 def compute_pass_at_k(
     results_per_problem: Dict[str, List[bool]],
-    problem_tags: Optional[Dict[str, str]] = None
+    problem_tags: Optional[Dict[str, str]] = None,
+    verdicts_per_problem: Optional[Dict[str, List[str]]] = None
 ) -> PassAtKReport:
-    """Compute pass@k (unbiased HumanEval/Codeforces pass rate) across problems.
+    """Compute pass@k (unbiased HumanEval/Codeforces pass rate) and failure taxonomy across problems.
     
     results_per_problem: map of problem_id -> list of booleans (True if generated sample solved test cases)
+    problem_tags: optional map of problem_id -> category string
+    verdicts_per_problem: optional map of problem_id -> list of verdicts ("AC", "WA", "TLE", "RE", "CE")
     """
     total_problems = len(results_per_problem)
     if total_problems == 0:
-        return PassAtKReport(0.0, 0.0, 0, 0, {}, {})
+        return PassAtKReport(0.0, 0.0, 0, 0, {}, {}, 0.0, {})
 
+    from math import comb
     pass_1_list = []
     pass_5_list = []
+    pass_10_list = []
     solved_count = 0
     cat_solved = {}
     cat_total = {}
+    failure_taxonomy: Dict[str, int] = defaultdict(int)
 
     for prob_id, sample_results in results_per_problem.items():
         n = len(sample_results)
@@ -117,15 +126,25 @@ def compute_pass_at_k(
         pass_1 = c / n if n > 0 else 0.0
         pass_1_list.append(pass_1)
 
-        # pass@5 unbiased estimator (or pass@n if n < 5)
-        k = min(5, n)
-        if n - c < k:
-            pass_k = 1.0
+        # pass@5 unbiased estimator
+        k5 = min(5, n)
+        if n == 0:
+            pass_k5 = 0.0
+        elif n - c < k5:
+            pass_k5 = 1.0
         else:
-            # 1 - comb(n - c, k) / comb(n, k)
-            from math import comb
-            pass_k = 1.0 - (comb(n - c, k) / comb(n, k))
-        pass_5_list.append(pass_k)
+            pass_k5 = 1.0 - (comb(n - c, k5) / comb(n, k5))
+        pass_5_list.append(pass_k5)
+
+        # pass@10 unbiased estimator
+        k10 = min(10, n)
+        if n == 0:
+            pass_k10 = 0.0
+        elif n - c < k10:
+            pass_k10 = 1.0
+        else:
+            pass_k10 = 1.0 - (comb(n - c, k10) / comb(n, k10))
+        pass_10_list.append(pass_k10)
 
         # Category tracking
         tag = (problem_tags or {}).get(prob_id, "unknown")
@@ -133,13 +152,33 @@ def compute_pass_at_k(
         if c > 0:
             cat_solved[tag] = cat_solved.get(tag, 0) + 1
 
+        # Failure taxonomy tracking
+        if verdicts_per_problem and prob_id in verdicts_per_problem:
+            for v in verdicts_per_problem[prob_id]:
+                v_clean = v.upper() if v else "UNKNOWN"
+                failure_taxonomy[v_clean] += 1
+        else:
+            # Fallback from boolean results
+            for r in sample_results:
+                failure_taxonomy["AC" if r else "WA"] += 1
+
     cat_rates = {t: round(cat_solved.get(t, 0) / cat_total[t], 4) for t in cat_total}
 
+    mean_pass_1 = round(float(np.mean(pass_1_list)), 4) if pass_1_list else 0.0
+    mean_pass_5 = round(float(np.mean(pass_5_list)), 4) if pass_5_list else 0.0
+    mean_pass_10 = round(float(np.mean(pass_10_list)), 4) if pass_10_list else 0.0
+
     return PassAtKReport(
-        pass_at_1=round(float(np.mean(pass_1_list)), 4),
-        pass_at_5=round(float(np.mean(pass_5_list)), 4),
+        pass_at_1=mean_pass_1,
+        pass_at_5=mean_pass_5,
         total_problems=total_problems,
         solved_problems=solved_count,
         category_pass_rates=cat_rates,
-        detailed_verdicts={"pass@1": round(float(np.mean(pass_1_list)), 4)}
+        detailed_verdicts={
+            "pass@1": mean_pass_1,
+            "pass@5": mean_pass_5,
+            "pass@10": mean_pass_10
+        },
+        pass_at_10=mean_pass_10,
+        failure_taxonomy=dict(failure_taxonomy)
     )

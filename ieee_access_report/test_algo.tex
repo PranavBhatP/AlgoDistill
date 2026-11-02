@@ -1,0 +1,47 @@
+\documentclass{ieeeaccess}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{booktabs}
+
+\begin{document}
+\history{Date of publication November 01, 2026, date of current version November 01, 2026.}
+\doi{10.1109/ACCESS.2026.IT488}
+\title{Test Title}
+\author{\uppercase{Author}\authorrefmark{1}}
+\address[1]{NITK}
+\corresp{Email: test@test.com}
+\markboth{Author \headeretal: Test}{Author \headeretal: Test}
+\begin{abstract}Test abstract.\end{abstract}
+\begin{keywords}Test.\end{keywords}
+\maketitle
+
+\section{Introduction}
+Test algorithm rendering:
+
+\begin{figure}[!ht]
+\centering
+\begin{minipage}{0.98\columnwidth}
+\hrule\vspace{2pt}
+\textbf{Algorithm 1: Semantic Rationale-Consistency Filter}
+\vspace{2pt}\hrule\vspace{4pt}
+\textbf{Input:} Dataset $\mathcal{D} = \{(X_i, R_i, \tau_i, C_i)\}$, Taxonomy keywords $\{\mathcal{K}_\tau\}$\
+\textbf{Output:} Clean distilled dataset $\mathcal{D}^*$
+\begin{enumerate}
+\itemsep=0pt
+\item Initialize $\mathcal{D}^* \leftarrow \emptyset$
+\item \textbf{for each} sample  \in \mathcal{D}$ \textbf{do}
+\item \quad $\mathcal{K}_{\text{matched}} \leftarrow \{w \in \mathcal{K}_\tau : w \in R\}$
+\item \quad $\text{Score} \leftarrow \min(1.0, 0.4 + 0.2 \cdot |\mathcal{K}_{\text{matched}}|)$
+\item \quad \textbf{if} $|R| \ge 40$ \textbf{and} $ \textbf{then}
+\item \quad\quad $\mathcal{D}^* \leftarrow \mathcal{D}^* \cup \{(X, R, \tau, C)\}$
+\item \textbf{return} $\mathcal{D}^*$
+\end{enumerate}
+\vspace{2pt}\hrule
+\end{minipage}
+\end{figure}
+
+\EOD
+\end{document}

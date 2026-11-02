@@ -59,6 +59,17 @@ class ExecutionResult:
         ]
         return data
 
+    @property
+    def error_message(self) -> Optional[str]:
+        if self.compilation_error:
+            return self.compilation_error
+        for tr in self.test_results:
+            if tr.error_message:
+                return tr.error_message
+        return None
+
+JudgeResult = ExecutionResult
+
 
 class SandboxJudge:
     """Sandboxed execution judge with resource limits."""
@@ -127,8 +138,8 @@ class SandboxJudge:
             overall_verdict = Verdict.AC
 
             for idx, tc in enumerate(test_cases):
-                inp = tc.get("input_data", "") if isinstance(tc, dict) else getattr(tc, "input_data", "")
-                expected = tc.get("output_data", "") if isinstance(tc, dict) else getattr(tc, "output_data", "")
+                inp = tc.get("input_data", tc.get("input", "")) if isinstance(tc, dict) else getattr(tc, "input_data", getattr(tc, "input", ""))
+                expected = tc.get("output_data", tc.get("output", "")) if isinstance(tc, dict) else getattr(tc, "output_data", getattr(tc, "output", ""))
 
                 start_t = time.perf_counter()
                 try:

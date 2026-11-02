@@ -63,8 +63,12 @@ class DatasetBuilder:
 
     def build_raw_dataset(self, use_offline_curated: bool = True) -> List[DatasetItem]:
         """Build the full dataset combining problem definitions and teacher traces."""
-        taco_path = os.path.join(self.data_dir, "taco_100_problems.json")
-        trace_path = os.path.join(self.data_dir, "teacher_traces_100.json")
+        taco_path = os.path.join(self.data_dir, "taco_300_problems.json")
+        trace_path = os.path.join(self.data_dir, "teacher_traces_300.json")
+
+        if not (os.path.exists(taco_path) and os.path.exists(trace_path)):
+            taco_path = os.path.join(self.data_dir, "taco_100_problems.json")
+            trace_path = os.path.join(self.data_dir, "teacher_traces_100.json")
 
         if os.path.exists(taco_path) and os.path.exists(trace_path):
             with open(taco_path, "r", encoding="utf-8") as f:

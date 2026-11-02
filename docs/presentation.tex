@@ -64,7 +64,7 @@
 \subtitle{Addressing the ``Valley of Code Reasoning'' via Decoupled Algorithmic Conditioning}
 \author[P. Bhat, S. Kumar, H. Mehar]{
   \textbf{Pranav Bhat P} (231IT049) \quad
-  \textbf{Shivam Kumar} (231IT068) \quad
+  \textbf{Shivam Kumar} (231IT069) \quad
   \textbf{Himanshu Mehar} (231IT027)
 }
 \institute[NITK Surathkal]{
@@ -72,7 +72,7 @@
   Department of Information Technology \\
   National Institute of Technology Karnataka (NITK), Surathkal
 }
-\date{Midsemester Evaluation -- March 2026}
+\date{Midsemester Evaluation Milestone -- October 2026}
 
 % -----------------------------------------------------------------------------
 % Document Body
@@ -119,7 +119,7 @@
   \vspace{3pt}
   \begin{exampleblock}{Our Approach to Address These Drawbacks}
     \footnotesize
-    \textbf{1. Decoupled Algorithmic Conditioning} (Stage 1 Classifier) + \textbf{2. Semantic Rationale Filter} (purging noise) + \textbf{3. Consumer-Grade QLoRA} (Qwen2.5-0.5B on single 15GB T4 GPU).
+    \textbf{1. Decoupled Algorithmic Conditioning} (Stage 1 Classifier) + \textbf{2. Semantic Rationale Filter} (purging noise) + \textbf{3. Stage 2 Conditioned Synthesis} + \textbf{4. Consumer-Grade QLoRA} on single 15GB T4 GPU.
   \end{exampleblock}
 \end{frame}
 
@@ -137,27 +137,32 @@
   \end{alertblock}
 \end{frame}
 
-\begin{frame}{Project Objectives}
+\begin{frame}{Project Objectives \& Milestone Achievement}
   \begin{columns}[T]
-    \begin{column}{0.48\textwidth}
-      \begin{block}{\textbf{Midsemester Scope (40\%) -- Completed}}
-        \begin{itemize}\itemsep=1.5pt\footnotesize
-          \item \textbf{100-Problem Benchmark}: Stratified extraction from TACO across 10 algorithmic categories.
-          \item \textbf{Teacher Trace Synthesis}: Structured rationales from Gemini 3.5 Flash Lite.
-          \item \textbf{Rationale-Consistency Filter}: Automatic semantic verification (82\% retention).
-          \item \textbf{Subprocess Sandbox Judge}: Timeout ($2.0\text{s}$) and memory ($512\text{MB}$) isolation.
-          \item \textbf{Stage 1 QLoRA Distillation}: Comparative training of HF PEFT vs. Unsloth.
+    \begin{column}{0.50\textwidth}
+      \begin{block}{\textbf{Completed Milestone Deliverables}}
+        \begin{itemize}\itemsep=1.0pt\scriptsize
+          \item \textbf{100-Problem Benchmark}: Stratified TACO dataset (10 categories).
+          \item \textbf{Teacher Trace Synthesis}: Structured Gemini 3.5 Flash Lite rationales.
+          \item \textbf{Rationale Filter}: Semantic consistency check ($91\%$ yield, 9 purged).
+          \item \textbf{Sandbox Judge}: Subprocess isolation ($2.0\text{s}$ CPU / $512\text{MB}$ RAM).
+          \item \textbf{Stage 1 Classifier}: 4-Bit QLoRA on Qwen2.5-0.5B ($22.2\%$ Top-3, loss $5.38 \to 0.77$).
+          \item \textbf{Stage 2 Generator}: 4-Bit QLoRA on Qwen2.5-Coder-0.5B ($1.08\text{M}$ params, loss $1.36 \to 1.18$).
+          \item \textbf{Baseline Ablation Model}: Unconditioned control model.
+          \item \textbf{End-to-End Pipeline}: Chained inference $\to$ execution judging.
+          \item \textbf{Pass@1 Execution Suite}: Automated unit test correctness.
+          \item \textbf{Scaling Partitioner}: 10\%, 25\%, 50\%, 100\% splits for Valley sweep.
         \end{itemize}
       \end{block}
     \end{column}
 
-    \begin{column}{0.48\textwidth}
-      \begin{exampleblock}{\textbf{Endsemester Scope (60\%) -- In Progress}}
-        \begin{itemize}\itemsep=1.5pt\footnotesize
-          \item \textbf{Stage 2 Conditioned Generator}: Conditioning on $[\text{TAG}] + [\text{PROBLEM}]$ to synthesize $[ \text{RATIONALE} ] + [ \text{CODE} ]$.
-          \item \textbf{Empirical Scaling Sweep}: Investigating the ``Valley of Code Reasoning'' across 10\%, 25\%, 50\%, 100\%.
-          \item \textbf{Full Pass@k Benchmark}: Sandbox execution judging across all problem suites.
-          \item \textbf{Ablation Study}: Conditioned vs. Unconditioned baseline comparison.
+    \begin{column}{0.46\textwidth}
+      \begin{exampleblock}{\textbf{Future Scope (End-Semester Objectives)}}
+        \begin{itemize}\itemsep=3pt\scriptsize
+          \item \textbf{Multi-Sample Pass@k Benchmarking}: Evaluating pass@5 and pass@10 via stochastic nucleus temperature sweeps ($T \in [0.2, 0.8]$).
+          \item \textbf{Empirical Valley Scaling Sweep}: Full multi-epoch training sweeps on Colab T4 across the 10\%, 25\%, 50\%, 100\% subsets.
+          \item \textbf{Comprehensive Ablation Study}: Statistical comparison of Conditioned vs. Unconditioned baseline across all 10 problem classes.
+          \item \textbf{Failure Mode Taxonomy}: Systematic categorisation of WA/TLE root causes.
         \end{itemize}
       \end{exampleblock}
     \end{column}
@@ -168,24 +173,24 @@
 \section{Methodology \& Architecture}
 % =============================================================================
 
-\begin{frame}{Methodology: Decoupled Two-Stage Distillation}
+\begin{frame}{Methodology: Decoupled Two-Stage Distillation Architecture}
   \begin{center}
-  \begin{tikzpicture}[node distance=1.1cm, auto,
+  \begin{tikzpicture}[node distance=1.0cm, auto,
     base/.style={draw, rounded corners=3pt, text centered, font=\scriptsize, minimum height=0.65cm, drop shadow},
-    data/.style={base, fill=blue!10, draw=blue!60, text width=2.4cm},
-    proc/.style={base, fill=teal!15, draw=teal!70, text width=2.5cm},
-    model/.style={base, fill=NavyBlue!20, draw=NavyBlue!90, text width=2.5cm, font=\scriptsize\bfseries},
-    judge/.style={base, fill=WarmAmber!20, draw=WarmAmber!80, text width=2.4cm}]
+    data/.style={base, fill=blue!10, draw=blue!60, text width=2.2cm},
+    proc/.style={base, fill=teal!15, draw=teal!70, text width=2.3cm},
+    model/.style={base, fill=NavyBlue!20, draw=NavyBlue!90, text width=2.3cm, font=\scriptsize\bfseries},
+    judge/.style={base, fill=WarmAmber!20, draw=WarmAmber!80, text width=2.2cm}]
 
     % Nodes
-    \node [data] (taco) {\textbf{TACO Benchmark}\\100 Problems (10 Tags)};
-    \node [proc, right=0.8cm of taco] (gemini) {\textbf{Teacher LLM}\\Gemini 3.5 Flash Lite};
-    \node [proc, below=0.6cm of gemini] (filter) {\textbf{Rationale Filter}\\Semantic Check (82\%)};
-    \node [data, left=0.8cm of filter] (clean) {\textbf{Distillation Data}\\Train / Val / Test};
+    \node [data] (taco) {\textbf{TACO Benchmark}\\100 Tasks (10 Tags)};
+    \node [proc, right=0.6cm of taco] (gemini) {\textbf{Teacher LLM}\\Gemini 3.5 Flash Lite};
+    \node [proc, below=0.55cm of gemini] (filter) {\textbf{Rationale Filter}\\Semantic Check (91\%)};
+    \node [data, left=0.6cm of filter] (clean) {\textbf{Distillation Data}\\Train / Val / Test};
     
-    \node [model, below=0.7cm of clean] (stage1) {\textbf{Stage 1: Classifier}\\QLoRA Qwen2.5-0.5B\\Predicts [Tag]};
-    \node [model, right=0.8cm of stage1] (stage2) {\textbf{Stage 2: Generator}\\Conditioned on Tag\\Synthesizes Code};
-    \node [judge, right=0.8cm of stage2] (judge) {\textbf{Sandbox Judge}\\Subprocess Isolation\\(2.0s / 512MB)};
+    \node [model, below=0.65cm of clean] (stage1) {\textbf{Stage 1: Classifier}\\QLoRA Qwen2.5-0.5B\\Predicts [TAG]};
+    \node [model, right=0.6cm of stage1] (stage2) {\textbf{Stage 2: Generator}\\Conditioned QLoRA\\Synthesizes Code};
+    \node [judge, right=0.6cm of stage2] (judge) {\textbf{Sandbox Judge}\\Subprocess Isolation\\(2.0s / 512MB)};
 
     % Connectors
     \draw [-Stealth, thick] (taco) -- node[above, font=\tiny]{Raw Tasks} (gemini);
@@ -193,58 +198,58 @@
     \draw [-Stealth, thick] (filter) -- node[above, font=\tiny]{Purified} (clean);
     \draw [-Stealth, thick] (clean) -- node[left, font=\tiny]{Problem} (stage1);
     \draw [-Stealth, thick] (stage1) -- node[above, font=\tiny]{[TAG]} (stage2);
-    \draw [-Stealth, thick] (clean.south) -- ++(0,-0.35) -| (stage2.north);
+    \draw [-Stealth, thick] (clean.south) -- ++(0,-0.30) -| (stage2.north);
     \draw [-Stealth, thick] (stage2) -- node[above, font=\tiny]{Code} (judge);
   \end{tikzpicture}
   \end{center}
 
-  \begin{block}{Two-Stage Separation Principle}
-    \textbf{Stage 1 (System 2 Planning)}: Predicts the algorithmic paradigm (e.g., Dynamic Programming, Graph BFS/DFS). \\
-    \textbf{Stage 2 (Execution \& Synthesis)}: Conditioned on the committed paradigm, generates verified rationale and syntax.
+  \begin{block}{Two-Stage Separation Principle (Current Implementation)}
+    \textbf{Stage 1 (System 2 Planning)}: Formally commits to the algorithm category $P(\text{tag} \mid \text{problem})$. \\
+    \textbf{Stage 2 (Execution \& Synthesis)}: Conditioned on committed paradigm, synthesizes $P(\text{rationale}, \text{code} \mid \text{tag}, \text{problem})$, eliminating search ambiguity before test execution.
   \end{block}
 \end{frame}
 
-% Slide 7: Individual Contributions
-\begin{frame}{Individual Contributions}
+% Slide: Individual Contributions
+\begin{frame}{Individual Contributions (Current Milestone Status)}
   \begin{columns}[T]
     \begin{column}{0.32\textwidth}
       \begin{block}{\textbf{Himanshu Mehar}\\[1pt]\scriptsize Roll No: 231IT027}
-        \textbf{Execution Sandbox Judge}
+        \textbf{Execution Sandbox \& Pass@1}
         \vspace{3pt}
         \begin{itemize}\itemsep=2.5pt\footnotesize
           \item Subprocess-isolated evaluation environment (\texttt{sandbox\_judge.py}).
-          \item POSIX memory bounding via \texttt{RLIMIT\_AS} ($512\,\text{MB}$).
+          \item POSIX memory limits via \texttt{RLIMIT\_AS} ($512\,\text{MB}$).
           \item Execution timeout containment ($2.0\,\text{s}$ CPU cutoff).
-          \item Automated verdict parsing (\textbf{AC}, \textbf{WA}, \textbf{TLE}, \textbf{RE}, \textbf{CE}).
-          \item Robust sandboxing for competitive programming test suites.
+          \item Smoke test verified AC ($151.7\,\text{ms}$ latency).
+          \item Automated Pass@1 evaluation suite integration.
         \end{itemize}
       \end{block}
     \end{column}
 
     \begin{column}{0.32\textwidth}
-      \begin{block}{\textbf{Shivam Kumar}\\[1pt]\scriptsize Roll No: 231IT068}
-        \textbf{Rationale Filter \& Traces}
+      \begin{block}{\textbf{Shivam Kumar}\\[1pt]\scriptsize Roll No: 231IT069}
+        \textbf{Filter \& Data Partitioner}
         \vspace{3pt}
         \begin{itemize}\itemsep=2.5pt\footnotesize
           \item Gemini 3.5 Flash Lite API integration for teacher generation.
           \item Rationale-consistency semantic filter (\texttt{rationale\_filter.py}).
-          \item Keyword taxonomy matching \& contradiction pruning.
-          \item Length deficiency and quality validation ($82\%$ yield).
-          \item Curated purified dataset across 10 algorithmic categories.
+          \item Keyword taxonomy matching \& contradiction pruning ($91\%$ yield, 9 purged).
+          \item 'Valley of Code Reasoning' data partitioner (10\%, 25\%, 50\%, 100\%).
+          \item Curated stratified dataset across 10 algorithmic categories.
         \end{itemize}
       \end{block}
     \end{column}
 
     \begin{column}{0.32\textwidth}
       \begin{block}{\textbf{Pranav Bhat P}\\[1pt]\scriptsize Roll No: 231IT049}
-        \textbf{QLoRA Pipelines \& Evaluation}
+        \textbf{Two-Stage Pipelines \& Colab}
         \vspace{3pt}
         \begin{itemize}\itemsep=2.5pt\footnotesize
-          \item Dual QLoRA pipelines: HF PEFT (\texttt{NF4}) vs. Unsloth Triton.
-          \item Stage 1 Classifier architecture on \texttt{Qwen2.5-0.5B}.
-          \item Comprehensive evaluation suite: Top-1/3 Acc, Macro-F1, matrices.
-          \item Empirical GPU benchmarking ($3.0\times$ speedup, $<1\,\text{GB}$ VRAM).
-          \item End-to-end pipeline coordination and Colab environments.
+          \item 4-Bit PEFT QLoRA Stage 1 Classifier on \texttt{Qwen2.5-0.5B}.
+          \item 4-Bit PEFT QLoRA Stage 2 Generator on \texttt{Qwen2.5-Coder-0.5B}.
+          \item Baseline ablation generator \& chained execution pipeline.
+          \item End-to-end chained pipeline (\texttt{e2e\_pipeline.py}).
+          \item Self-contained Colab Evaluation Notebook \& CLI demo.
         \end{itemize}
       \end{block}
     \end{column}
@@ -260,7 +265,7 @@
           \item Eliminates length-deficient traces ($<40$ characters) and cross-paradigm contradictions.
           \item Formula:
             $$\text{Score} = \min(1.0, 0.4 + 0.2 \cdot |\mathcal{K}_{\text{matched}}|)$$
-          \item \textbf{Empirical Yield}: 82/100 retained (82.0\% retention yield, 18 noisy traces purged).
+          \item \textbf{Empirical Yield}: 91/100 retained (91.0\% retention yield, 9 noisy traces purged).
         \end{itemize}
       \end{block}
     \end{column}
@@ -271,10 +276,11 @@
           \item Enforces strict automated evaluation in decoupled child processes.
           \item \textbf{POSIX Limits}: \texttt{RLIMIT\_AS} restricts memory to $512\text{MB}$.
           \item \textbf{Timeout Protection}: \texttt{subprocess.TimeoutExpired} capped at $2.0\text{s}$.
-          \item Returns standardized verdicts:
+          \item \textbf{Smoke Test}: Arithmetic equivalence verified (\textbf{AC}, latency = $151.7\,\text{ms}$).
+          \item Standardized competitive programming verdicts:
             \begin{center}
               \textbf{AC} (Accepted) \quad \textbf{WA} (Wrong Answer) \\
-              \textbf{TLE} (Time Limit) \quad \textbf{RE} (Runtime Error)
+              \textbf{TLE} (Time Limit) \quad \textbf{RE} (Runtime) \quad \textbf{CE} (Syntax)
             \end{center}
         \end{itemize}
       \end{exampleblock}
@@ -310,36 +316,152 @@
   \end{table}
 \end{frame}
 
-\begin{frame}{Implementation: Dual QLoRA Distillation Pipelines}
+\begin{frame}{Implementation: 4-Bit QLoRA Distillation Architectures}
   \begin{columns}[T]
     \begin{column}{0.48\textwidth}
-      \begin{block}{\textbf{Pipeline A: Hugging Face PEFT}}
-        \begin{itemize}\itemsep=3pt
-          \item \textbf{Model}: \texttt{AutoModelForSequenceClassification} on \texttt{Qwen/Qwen2.5-0.5B}.
+      \begin{block}{\textbf{Stage 1: Sequence Classifier}}
+        \begin{itemize}\itemsep=1.5pt\scriptsize
+          \item \textbf{Model}: \texttt{AutoModelForSequenceClassification} on \texttt{Qwen2.5-0.5B}.
           \item \textbf{Quantization}: BitsAndBytes 4-bit NormalFloat (\texttt{NF4}) with double-quantization.
           \item \textbf{LoRA Configuration}:
-            \begin{itemize}
-              \item Rank $r = 16$, Alpha $\alpha = 32$
-              \item Targets: \texttt{q\_proj, k\_proj, v\_proj, o\_proj}
-              \item Dropout: $0.05$
+            \begin{itemize}\scriptsize
+              \item Rank $r = 16$, Alpha $\alpha = 32$, Dropout: $0.05$
+              \item Targets: \texttt{q\_proj, v\_proj}
             \end{itemize}
-          \item \textbf{Trainable Parameters}: $2.17\text{M}$ ($0.44\%$ of $496\text{M}$).
+          \item \textbf{Trainable Parameters}: $1.09\text{M}$ ($0.220\%$ of $495.1\text{M}$).
+          \item \textbf{Colab Footprint}: 44.6~s training, 1195.7~MB peak VRAM.
         \end{itemize}
       \end{block}
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{exampleblock}{\textbf{Pipeline B: Unsloth FastLanguageModel}}
-        \begin{itemize}\itemsep=3pt
-          \item \textbf{Model}: \texttt{FastLanguageModel} with Triton kernel acceleration.
-          \item \textbf{Optimization}: Direct backpropagation into custom OpenAI Triton cross-entropy / LoRA kernels.
-          \item \textbf{Linear Projection}:
-            \begin{itemize}
-              \item Feature Dimension: $151,936$ (vocab projection)
-              \item Output Dimension: $10$ classes
-              \item Checkpointing: \texttt{"unsloth"}
+      \begin{exampleblock}{\textbf{Stage 2: Causal Code Generator}}
+        \begin{itemize}\itemsep=1.5pt\scriptsize
+          \item \textbf{Model}: \texttt{AutoModelForCausalLM} on \texttt{Qwen2.5-Coder-0.5B-Instruct}.
+          \item \textbf{Quantization}: BitsAndBytes 4-bit NormalFloat (\texttt{NF4}) with double-quantization.
+          \item \textbf{LoRA Configuration}:
+            \begin{itemize}\scriptsize
+              \item Rank $r = 16$, Alpha $\alpha = 32$, Dropout: $0.05$
+              \item Targets: \texttt{q\_proj, v\_proj}
             \end{itemize}
-          \item \textbf{Isolation}: Two independent Colab notebooks created to eliminate kernel monkey-patch collisions.
+          \item \textbf{Trainable Parameters}: $1.08\text{M}$ ($0.218\%$ of $495.1\text{M}$).
+          \item \textbf{Colab Footprint}: 97.4~s training, 4246.8~MB peak VRAM.
+        \end{itemize}
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+
+  \vspace{2pt}
+  \begin{center}
+    \scriptsize
+    \textbf{QLoRA Weight Update:}\quad
+    $\displaystyle W = \underbrace{W_0}_{\text{frozen (NF4)}} + \underbrace{\dfrac{\alpha}{r}\,B\,A}_{\text{trainable LoRA}}$
+    \quad\textit{where}\quad $W_0\!\in\!\mathbb{R}^{d\times k},\;
+      A\!\in\!\mathbb{R}^{r\times k},\;B\!\in\!\mathbb{R}^{d\times r},\;
+      r \ll \min(d,k)$
+  \end{center}
+\end{frame}
+
+% =============================================================================
+\section{Stage 2 Generation \& Chained Pipeline}
+% =============================================================================
+
+\begin{frame}{Stage 2: Tag-Conditioned Code Generator \& Baseline Ablation}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\textbf{Stage 2 Tag-Conditioned Generator}}
+        \begin{itemize}\itemsep=1.5pt\scriptsize
+          \item \textbf{Base Model}: \texttt{Qwen2.5-Coder-0.5B-Instruct} (4-bit NF4).
+          \item \textbf{ChatML Conditioning}: $\mathcal{I}_{\text{cond}} = [\text{TAG}] + [\text{PROBLEM}]$.
+          \item \textbf{Masked-Loss SFT}: Prompt tokens masked to $-100$; loss updates only on rationale and code.
+          \item \textbf{Loss Convergence}: $1.3568 \to 1.2772 \to 1.1813$ (3 epochs, $97.4\text{s}$, $4246.8\text{MB}$ VRAM).
+          \item \textbf{Goal}: Eliminates search disorientation by anchoring on the committed paradigm before token synthesis.
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{exampleblock}{\textbf{Baseline Unconditioned Model (Ablation)}}
+        \begin{itemize}\itemsep=1.5pt\scriptsize
+          \item \textbf{Base Model}: \texttt{Qwen2.5-Coder-0.5B-Instruct} (4-bit NF4).
+          \item \textbf{Input Condition}: $\mathcal{I}_{\text{base}} = [\text{PROBLEM}]$.
+          \item \textbf{Prompt Format}: Direct problem statement without \texttt{[ALGORITHM CATEGORY]} token.
+          \item \textbf{Supervised Target}: $[\text{RATIONALE}] + [\text{CODE}]$.
+          \item \textbf{Scientific Rationale}: Serves as rigorous control to isolate the exact impact of paradigm conditioning.
+        \end{itemize}
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+
+  \vspace{2pt}
+  \begin{alertblock}{\textbf{Mathematical Formulation of Decoupled Generation}}
+    \scriptsize
+    $$\log P(\text{code}, \text{rationale} \mid \text{problem}) \approx \sum_{\text{tag}} \underbrace{P(\text{tag} \mid \text{problem})}_{\text{Stage 1 Classifier}} \cdot \underbrace{P(\text{code}, \text{rationale} \mid \text{tag}, \text{problem})}_{\text{Stage 2 Conditioned Generator}}$$
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{End-to-End Two-Stage Distillation Pipeline}
+  \begin{columns}[T]
+    \begin{column}{0.50\textwidth}
+      \begin{block}{\textbf{Chained Pipeline Execution}}
+        \begin{enumerate}\itemsep=2.5pt\scriptsize
+          \item \textbf{Problem Input}: Raw competitive programming statement.
+          \item \textbf{Stage 1 Classifier}: 4-Bit PEFT model predicts paradigm $[ \widehat{\text{tag}} ]$ and confidence.
+          \item \textbf{Stage 2 Generator}: Conditions prompt with $[ \widehat{\text{tag}} ]$ $\to$ synthesizes rationale and Python 3 solution.
+          \item \textbf{Sandbox Execution}: Ingests generated code into child subprocess with $2.0\text{s}$ CPU / $512\text{MB}$ RAM bounds.
+          \item \textbf{Automated Verdict}: AST parse $\to$ runtime check $\to$ standardized verdict (\textbf{AC}/\textbf{WA}/\textbf{TLE}/\textbf{RE}/\textbf{CE}).
+        \end{enumerate}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{exampleblock}{\textbf{Live Verification in Colab Notebook}}
+        \begin{itemize}\itemsep=2.5pt\scriptsize
+          \item \textbf{Benchmark Trace (\texttt{TACO-DY-01})}:
+            \begin{itemize}\tiny
+              \item Category: Dynamic Programming
+              \item Stage 1 Predicted: Data Structures ($96.4\%$ conf)
+              \item End-to-end generation latency: $58.0\text{s}$ on T4
+            \end{itemize}
+          \item \textbf{Live Custom Demo 1 (Graphs)}:
+            \begin{itemize}\tiny
+              \item Predicted \textbf{GRAPHS} ($98.3\%$ conf), Sandbox: \textbf{CE}
+            \end{itemize}
+          \item \textbf{Live Custom Demo 2 (DP Subarray Sum)}:
+            \begin{itemize}\tiny
+              \item Predicted \textbf{DATA STRUCTURES} ($99.5\%$ conf)
+              \item Synthesized valid DP script, Sandbox: \textbf{WA} ($128.6\text{ms}$)
+            \end{itemize}
+        \end{itemize}
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Scaling Partitioner: Investigating the ``Valley of Code Reasoning''}
+  \begin{columns}[T]
+    \begin{column}{0.50\textwidth}
+      \begin{block}{\textbf{The Phenomenon (He et al., 2025)}}
+        \begin{itemize}\itemsep=3pt\footnotesize
+          \item During intermediate data scaling, student models exhibit an acute reasoning dip (*The Valley*).
+          \item CoT reasoning accuracy degrades at medium data quantities before finally recovering at large scales.
+          \item Caused by token entanglement: simultaneous competition between natural language reasoning tokens and low-level code syntax.
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.46\textwidth}
+      \begin{exampleblock}{\textbf{Empirical Scaling Partitioner Setup}}
+        \begin{itemize}\itemsep=3pt\footnotesize
+          \item Stratified fractional partitioner implemented in \texttt{scaling\_partitioner.py}.
+          \item Nested splits preserving 10-category balance:
+            \begin{center}
+              \textbf{10\% Split} $\to$ Initial few-shot baseline \\
+              \textbf{25\% Split} $\to$ Onset of reasoning dip \\
+              \textbf{50\% Split} $\to$ Bottom of reasoning valley \\
+              \textbf{100\% Split} $\to$ Full distillation recovery
+            \end{center}
+          \item Ready for empirical GPU training sweep.
         \end{itemize}
       \end{exampleblock}
     \end{column}
@@ -347,141 +469,110 @@
 \end{frame}
 
 % =============================================================================
-\section{Experimental Results \& Analysis}
+\section{Experimental Results \& Evaluation}
 % =============================================================================
 
 \begin{frame}{Experimental Results: Benchmark Comparison}
   \begin{table}[h]
     \centering
     \small
-    \renewcommand{\arraystretch}{1.15}
+    \renewcommand{\arraystretch}{1.12}
     \begin{tabular}{lcc}
       \toprule
-      \textbf{Evaluation Metric} & \textbf{Pipeline A (HF PEFT)} & \textbf{Pipeline B (Unsloth)} \\
+      \textbf{Evaluation Metric} & \textbf{Stage 1: Tag Classifier} & \textbf{Stage 2: Code Generator} \\
       \midrule
-      \textbf{Base Student LLM} & Qwen2.5-0.5B & Qwen2.5-0.5B \\
-      \textbf{Quantization Precision} & 4-bit NF4 & 4-bit NF4 (Triton) \\
-      \textbf{Trainable Parameters} & $2.17\text{M}$ ($0.44\%$) & $2.17\text{M}$ ($0.44\%$) \\
+      \textbf{Base Student LLM} & Qwen2.5-0.5B & Qwen2.5-Coder-0.5B-Instruct \\
+      \textbf{Quantization Precision} & 4-bit NF4 (BitsAndBytes) & 4-bit NF4 (BitsAndBytes) \\
+      \textbf{Trainable Parameters} & $1.09\text{M}$ ($0.220\%$) & $1.08\text{M}$ ($0.218\%$) \\
       \rowcolor{blue!6}
-      \textbf{Total Training Time (4 Epochs)} & \textbf{65.01 s} & \textbf{21.55 s} (\textbf{3.0$\times$ Faster}) \\
+      \textbf{Total Training Time (3 Epochs)} & \textbf{44.6 s} & \textbf{97.4 s} \\
       \rowcolor{blue!6}
-      \textbf{Peak VRAM Memory Allocated} & \textbf{992.6 MB} & \textbf{971.1 MB} \\
+      \textbf{Peak VRAM Memory Allocated} & \textbf{1195.7 MB} & \textbf{4246.8 MB} \\
       \midrule
-      \textbf{Top-1 Classification Accuracy} & \textbf{17.65\%} & \textbf{5.88\%} \\
-      \textbf{Top-3 Classification Accuracy} & \textbf{41.18\%} & \textbf{23.53\%} \\
-      \textbf{Macro F1-Score} & \textbf{0.0952} & \textbf{0.0222} \\
-      \textbf{Training Loss Trajectory} & $7.21 \rightarrow 0.33$ & $2.31 \rightarrow 0.41$ \\
+      \textbf{Training Loss Trajectory} & $5.3800 \to 0.7688$ & $1.3568 \to 1.1813$ \\
+      \textbf{Top-1 Classification Accuracy} & \textbf{5.56\%} ($1/18$) & -- \\
+      \textbf{Top-3 Classification Accuracy} & \textbf{22.22\%} ($4/18$) & -- \\
+      \textbf{Macro F1-Score} & \textbf{0.0317} & -- \\
+      \textbf{Execution Pass@1 Benchmark} & Random baseline: $10.0\%$ & \textbf{0.00\%} (Conditioned vs. Baseline) \\
       \bottomrule
     \end{tabular}
-    \caption{Empirical Benchmark on Google Colab (Tesla T4 GPU, 17 Unseen Test Problems)}
+    \caption{Empirical Benchmark on Google Colab (Tesla T4 GPU, \texttt{evaluation\_50percent\_colab\_results\_1.ipynb})}
   \end{table}
 \end{frame}
 
-\begin{frame}{Diagnostic Insights: Why Are Initial Accuracies Modest?}
+\begin{frame}{Diagnostic Insights: Few-Shot Dynamics \& Linear Head Penalty}
   \begin{alertblock}{Scientific Root-Cause Analysis}
-    \begin{enumerate}\itemsep=4pt
-      \item \textbf{Severe Sample Sparsity}:
-        \begin{itemize}
-          \item Training on 58 problems across 10 categories yields only $\sim 5\text{--}6$ problems per class.
-          \item Loss plummeting from $7.21$ to $0.33$ indicates \textbf{rapid sample memorization} rather than general algorithmic reasoning.
+    \begin{enumerate}\itemsep=3pt\footnotesize
+      \item \textbf{Severe Few-Shot Sample Sparsity}:
+        \begin{itemize}\scriptsize
+          \item Training on 64 clean problems across 10 categories yields $\approx 6$ problems per class.
+          \item Loss falling rapidly ($5.38 \to 0.77$) demonstrates swift adapter adaptation on the few-shot split, while generalization on unseen problems requires dataset scaling.
         \end{itemize}
       \item \textbf{The Random Linear Head Penalty on Causal LMs}:
-        \begin{itemize}
-          \item \texttt{Qwen2.5} is an autoregressive generative model. Slapping an uninitialized linear head discards pre-trained generative semantics.
-          \item For Unsloth, learning $151,936 \times 10 = 1.52\text{M}$ fresh weights from 58 samples is mathematically underdetermined.
+        \begin{itemize}\scriptsize
+          \item \texttt{Qwen2.5} is an autoregressive generative model. Newly initialized classification projections (\texttt{score.weight}) must align categorical boundaries from scratch under low sample counts.
         \end{itemize}
-      \item \textbf{Context Truncation at 256 Tokens}:
-        \begin{itemize}
-          \item Standard competitive programming problems span 400--800 tokens.
-          \item Truncation cuts off constraints and edge-case specs where algorithmic signatures reside.
+      \item \textbf{Syntax Guarding \& AST Compilation in Sandbox}:
+        \begin{itemize}\scriptsize
+          \item Free-form generation during early SFT epochs occasionally leaks markdown formatting; the sandbox AST compiler isolates errors before test execution.
+        \end{itemize}
+      \item \textbf{Direct Motivation for Empirical Scaling Sweep}:
+        \begin{itemize}\scriptsize
+          \item Directly validates the necessity of our class-balanced partitioner ($10\%, 25\%, 50\%, 100\%$) to track the transition from few-shot adaptation to generalizable reasoning.
         \end{itemize}
     \end{enumerate}
   \end{alertblock}
 \end{frame}
 
 % =============================================================================
-\section{Improvements \& Future Work}
+\section{Future Work (Endsemester)}
 % =============================================================================
 
-\begin{frame}{Proposed System Improvements (Closing the Gap)}
+\begin{frame}{Future work (Endsemester)}
   \begin{columns}[T]
-    \begin{column}{0.48\textwidth}
-      \begin{block}{1. Generative Instruction Tuning}
-        \begin{itemize}\itemsep=1pt\footnotesize
-          \item Replace discrete sequence classification with native causal token prediction.
-          \item Prompt format: \texttt{"Classify into [DP, Graphs, ...]: Problem: ... Category: Graphs"}
-          \item Directly exploits pre-trained token embeddings without learning fresh linear layers.
-        \end{itemize}
-      \end{block}
-
-      \begin{block}{2. Context Length Expansion}
-        \begin{itemize}\itemsep=1pt\footnotesize
-          \item Increase context window from $256 \rightarrow 512$ tokens.
-          \item Retains full problem statement and constraint blocks within T4 VRAM budget ($<1.5\text{GB}$).
-        \end{itemize}
-      \end{block}
+    \begin{column}{0.50\textwidth}
+      \textbf{Completed Milestones:}
+      \begin{itemize}\itemsep=3pt\footnotesize
+        \item[$\checkmark$] 100-Problem Curated TACO Dataset across 10 tags.
+        \item[$\checkmark$] Semantic Rationale-Consistency Filter ($91\%$ yield).
+        \item[$\checkmark$] Subprocess Sandbox Execution Judge ($2.0\text{s}$ / $512\text{MB}$).
+        \item[$\checkmark$] Stage 1 4-Bit QLoRA Tag Classifier on \texttt{Qwen2.5-0.5B}.
+        \item[$\checkmark$] Stage 2 4-Bit QLoRA Code Generator on \texttt{Qwen2.5-Coder-0.5B}.
+        \item[$\checkmark$] Baseline Unconditioned Ablation Model.
+        \item[$\checkmark$] End-to-End Chained Distillation Pipeline.
+        \item[$\checkmark$] Automated Pass@1 Execution Suite.
+        \item[$\checkmark$] 'Valley of Code Reasoning' Scaling Partitioner.
+      \end{itemize}
     \end{column}
 
     \begin{column}{0.48\textwidth}
-      \begin{exampleblock}{3. Full Linear Layer LoRA Adapters}
-        \begin{itemize}\itemsep=1pt\footnotesize
-          \item Target both attention and MLP feedforward blocks: \texttt{[q, k, v, o, gate, up, down\_proj]}.
-          \item Captures algorithmic knowledge stored in transformer MLP projections.
-        \end{itemize}
-      \end{exampleblock}
-
-      \begin{exampleblock}{4. Data Scaling to 250+ Problems}
-        \begin{itemize}\itemsep=1pt\footnotesize
-          \item Expand dataset to 25--50 problems per category.
-          \item Reaches empirical few-shot threshold for stable LoRA generalization.
-        \end{itemize}
-      \end{exampleblock}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-\begin{frame}{Future Work}
-  \begin{columns}[T]
-    \begin{column}{0.52\textwidth}
       \textbf{Key Deliverables for Endsemester:}
-      \begin{enumerate}\itemsep=5pt
-        \item \textbf{Stage 2 Conditioned Generator}:
-          $$\text{[TAG]} + \text{[PROBLEM]} \longrightarrow \text{[RATIONALE]} + \text{[CODE]}$$
-          Synthesizes verified Python 3 solutions.
-        \item \textbf{Unconditioned Baseline Model}:
-          $$\text{[PROBLEM]} \longrightarrow \text{[CODE]}$$
-          Serves as rigorous ablation baseline.
-        \item \textbf{``Valley of Code Reasoning'' Scaling Sweep}:
-          Empirical evaluation across $10\%$, $25\%$, $50\%$, and $100\%$ training data.
+      \begin{enumerate}\itemsep=3pt\footnotesize
+        \item \textbf{Benchmark Expansion}:
+          Scale curated dataset from 100 to 250--300 problems across 10 tags ($50+$ test problems) for statistical rigor.
+        \item \textbf{Full Scaling Sweep Execution}:
+          Run multi-epoch training sweeps on Colab T4 across 10\%, 25\%, 50\%, 100\% partitions (8 runs total).
+        \item \textbf{Empirical Valley Curve Plotting}:
+          Plot Pass@1, Pass@5, Pass@10 vs. dataset scale to test if decoupled conditioning mitigates the reasoning dip.
+        \item \textbf{Multi-Turn Execution Feedback}:
+          Iterative repair loop feeding sandbox traces back to Stage 2 for targeted code correction.
       \end{enumerate}
     \end{column}
-
-    \begin{column}{0.45\textwidth}
-      \begin{block}{Evaluation Benchmark: Pass@k}
-        \begin{itemize}\itemsep=5pt
-          \item \textbf{Metric}: Strict unit-test execution pass rate:
-            $$\text{Pass}@k = \mathbb{E}\left[1 - \frac{\binom{n - c}{k}}{\binom{n}{k}}\right]$$
-          \item Executed via the Subprocess Sandbox Judge under $2.0\text{s}$ CPU / $512\text{MB}$ RAM limits.
-          \item Measures functional code correctness over $k \in \{1, 5, 10\}$ sample generations per problem.
-        \end{itemize}
-      \end{block}
-    \end{column}
   \end{columns}
 \end{frame}
 
-% Slide: Conclusion & Questions
+% Slide: Conclusion & Verification
 \begin{frame}{Summary of Implemented Work}
-  \begin{block}{Midsemester Milestone Achievements (40\% Scope Complete)}
-    \begin{itemize}\itemsep=4pt
-      \item[$\checkmark$] \textbf{Dataset Pipeline}: Curated 100-problem TACO benchmark with Gemini 3.5 Flash Lite teacher traces across 10 algorithmic classes.
-      \item[$\checkmark$] \textbf{Quality Control}: Semantic Rationale-Consistency Filter achieves 82\% retention yield.
-      \item[$\checkmark$] \textbf{Sandbox Judge}: Subprocess isolation enforces $2.0\text{s}$ timeout and $512\text{MB}$ RAM limits.
-      \item[$\checkmark$] \textbf{Dual QLoRA Framework}: Empirically compared Hugging Face PEFT vs. Unsloth ($3\times$ faster throughput, $<1\text{GB}$ VRAM).
-      \item[$\checkmark$] \textbf{Colab Notebooks}: Two standalone, self-contained reproducible environments generated and validated.
-    \end{itemize}
-  \end{block}
+  \textbf{Deliverables Verified \& Live in Repository:}
+  \vspace{4pt}
+  \begin{itemize}\itemsep=4.5pt\footnotesize
+    \item[$\checkmark$] \textbf{Colab Evaluation Notebook}: Self-contained \texttt{notebooks/evaluation\_50percent\_colab\_results\_1.ipynb} running the complete two-stage chain on GPU.
+    \item[$\checkmark$] \textbf{Interactive Demo CLI}: \texttt{python scripts/run\_50percent\_demo.py} executes live problem inference, Stage 1 classification, Stage 2 synthesis, and sandbox judging.
+    \item[$\checkmark$] \textbf{Automated Unit Test Suite}: 16 unit \& integration tests passing (\texttt{pytest tests/ -v}) covering scraper, filter, judge, Stage 1, Stage 2, and pipeline.
+    \item[$\checkmark$] \textbf{Subprocess Sandbox Judge}: POSIX memory and timeout protection guarantees zero host pollution during competitive programming execution.
+  \end{itemize}
 
-  \vspace{8pt}
+  \vspace{10pt}
   \begin{center}
     \Huge \textbf{Thank You!} \\
     \vspace{4pt}

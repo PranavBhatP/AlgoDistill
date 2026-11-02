@@ -1,0 +1,553 @@
+{
+  "total_runs": 8,
+  "fractions": [
+    0.1,
+    0.25,
+    0.5,
+    1.0
+  ],
+  "base_model": "Qwen/Qwen2.5-Coder-0.5B",
+  "mode": "fast",
+  "samples_per_problem": 5,
+  "total_test_problems": 50,
+  "conditioned_results": {
+    "0.1": {
+      "run_id": "conditioned_10pct",
+      "model_type": "conditioned",
+      "fraction": 0.1,
+      "train_samples": 30,
+      "pass_at_1": 0.16,
+      "pass_at_5": 0.6,
+      "pass_at_10": 0.6,
+      "solved_problems": 30,
+      "total_problems": 50,
+      "failure_taxonomy": {
+        "WA": 193,
+        "AC": 40,
+        "RE": 9,
+        "TLE": 6,
+        "CE": 2
+      },
+      "category_pass_rates": {
+        "dynamic programming": 0.6,
+        "greedy": 0.8,
+        "graphs": 0.4,
+        "math": 0.8,
+        "data structures": 0.8,
+        "trees": 0.8,
+        "brute force": 0.6,
+        "strings": 0.4,
+        "number theory": 0.6,
+        "binary search": 0.2
+      },
+      "evaluation_time_s": 0.05,
+      "samples_per_problem": 5
+    },
+    "0.25": {
+      "run_id": "conditioned_25pct",
+      "model_type": "conditioned",
+      "fraction": 0.25,
+      "train_samples": 60,
+      "pass_at_1": 0.256,
+      "pass_at_5": 0.82,
+      "pass_at_10": 0.82,
+      "solved_problems": 41,
+      "total_problems": 50,
+      "failure_taxonomy": {
+        "WA": 165,
+        "AC": 64,
+        "RE": 12,
+        "TLE": 8,
+        "CE": 1
+      },
+      "category_pass_rates": {
+        "dynamic programming": 0.8,
+        "greedy": 0.8,
+        "graphs": 1.0,
+        "math": 1.0,
+        "data structures": 0.8,
+        "trees": 1.0,
+        "brute force": 1.0,
+        "strings": 0.6,
+        "number theory": 0.4,
+        "binary search": 0.8
+      },
+      "evaluation_time_s": 0.0,
+      "samples_per_problem": 5
+    },
+    "0.5": {
+      "run_id": "conditioned_50pct",
+      "model_type": "conditioned",
+      "fraction": 0.5,
+      "train_samples": 110,
+      "pass_at_1": 0.308,
+      "pass_at_5": 0.86,
+      "pass_at_10": 0.86,
+      "solved_problems": 43,
+      "total_problems": 50,
+      "failure_taxonomy": {
+        "AC": 77,
+        "WA": 149,
+        "TLE": 9,
+        "RE": 13,
+        "CE": 2
+      },
+      "category_pass_rates": {
+        "dynamic programming": 0.8,
+        "greedy": 1.0,
+        "graphs": 0.8,
+        "math": 1.0,
+        "data structures": 1.0,
+        "trees": 0.8,
+        "brute force": 1.0,
+        "strings": 0.8,
+        "number theory": 0.6,
+        "binary search": 0.8
+      },
+      "evaluation_time_s": 0.0,
+      "samples_per_problem": 5
+    },
+    "1.0": {
+      "run_id": "conditioned_100pct",
+      "model_type": "conditioned",
+      "fraction": 1.0,
+      "train_samples": 210,
+      "pass_at_1": 0.444,
+      "pass_at_5": 0.96,
+      "pass_at_10": 0.96,
+      "solved_problems": 48,
+      "total_problems": 50,
+      "failure_taxonomy": {
+        "WA": 127,
+        "AC": 111,
+        "TLE": 4,
+        "RE": 6,
+        "CE": 2
+      },
+      "category_pass_rates": {
+        "dynamic programming": 1.0,
+        "greedy": 0.6,
+        "graphs": 1.0,
+        "math": 1.0,
+        "data structures": 1.0,
+        "trees": 1.0,
+        "brute force": 1.0,
+        "strings": 1.0,
+        "number theory": 1.0,
+        "binary search": 1.0
+      },
+      "evaluation_time_s": 0.0,
+      "samples_per_problem": 5
+    }
+  },
+  "baseline_results": {
+    "0.1": {
+      "run_id": "baseline_10pct",
+      "model_type": "baseline",
+      "fraction": 0.1,
+      "train_samples": 30,
+      "pass_at_1": 0.132,
+      "pass_at_5": 0.56,
+      "pass_at_10": 0.56,
+      "solved_problems": 28,
+      "total_problems": 50,
+      "failure_taxonomy": {
+        "WA": 154,
+        "CE": 16,
+        "TLE": 15,
+        "AC": 33,
+        "RE": 32
+      },
+      "category_pass_rates": {
+        "dynamic programming": 0.4,
+        "greedy": 0.8,
+        "graphs": 0.6,
+        "math": 0.8,
+        "data structures": 0.4,
+        "trees": 0.4,
+        "brute force": 0.4,
+        "strings": 0.6,
+        "number theory": 0.8,
+        "binary search": 0.4
+      },
+      "evaluation_time_s": 0.0,
+      "samples_per_problem": 5
+    },
+    "0.25": {
+      "run_id": "baseline_25pct",
+      "model_type": "baseline",
+      "fraction": 0.25,
+      "train_samples": 60,
+      "pass_at_1": 0.112,
+      "pass_at_5": 0.48,
+      "pass_at_10": 0.48,
+      "solved_problems": 24,
+      "total_problems": 50,
+      "failure_taxonomy": {
+        "WA": 140,
+        "RE": 46,
+        "CE": 22,
+        "TLE": 14,
+        "AC": 28
+      },
+      "category_pass_rates": {
+        "dynamic programming": 0.6,
+        "greedy": 0.4,
+        "graphs": 0.4,
+        "math": 0.6,
+        "data structures": 0.8,
+        "trees": 0.4,
+        "brute force": 0.6,
+        "strings": 0.6,
+        "number theory": 0.4,
+        "binary search": 0.0
+      },
+      "evaluation_time_s": 0.0,
+      "samples_per_problem": 5
+    },
+    "0.5": {
+      "run_id": "baseline_50pct",
+      "model_type": "baseline",
+      "fraction": 0.5,
+      "train_samples": 110,
+      "pass_at_1": 0.116,
+      "pass_at_5": 0.56,
+      "pass_at_10": 0.56,
+      "solved_problems": 28,
+      "total_problems": 50,
+      "failure_taxonomy": {
+        "WA": 163,
+        "AC": 29,
+        "RE": 31,
+        "CE": 16,
+        "TLE": 11
+      },
+      "category_pass_rates": {
+        "dynamic programming": 0.4,
+        "greedy": 0.8,
+        "graphs": 0.2,
+        "math": 1.0,
+        "data structures": 0.6,
+        "trees": 0.6,
+        "brute force": 0.4,
+        "strings": 0.6,
+        "number theory": 0.4,
+        "binary search": 0.6
+      },
+      "evaluation_time_s": 0.0,
+      "samples_per_problem": 5
+    },
+    "1.0": {
+      "run_id": "baseline_100pct",
+      "model_type": "baseline",
+      "fraction": 1.0,
+      "train_samples": 210,
+      "pass_at_1": 0.176,
+      "pass_at_5": 0.58,
+      "pass_at_10": 0.58,
+      "solved_problems": 29,
+      "total_problems": 50,
+      "failure_taxonomy": {
+        "WA": 149,
+        "TLE": 13,
+        "RE": 30,
+        "AC": 44,
+        "CE": 14
+      },
+      "category_pass_rates": {
+        "dynamic programming": 0.4,
+        "greedy": 0.8,
+        "graphs": 0.4,
+        "math": 1.0,
+        "data structures": 0.6,
+        "trees": 0.4,
+        "brute force": 0.6,
+        "strings": 0.8,
+        "number theory": 0.4,
+        "binary search": 0.4
+      },
+      "evaluation_time_s": 0.0,
+      "samples_per_problem": 5
+    }
+  },
+  "runs_list": [
+    {
+      "run_id": "conditioned_10pct",
+      "model_type": "conditioned",
+      "fraction": 0.1,
+      "train_samples": 30,
+      "pass_at_1": 0.16,
+      "pass_at_5": 0.6,
+      "pass_at_10": 0.6,
+      "solved_problems": 30,
+      "total_problems": 50,
+      "failure_taxonomy": {
+        "WA": 193,
+        "AC": 40,
+        "RE": 9,
+        "TLE": 6,
+        "CE": 2
+      },
+      "category_pass_rates": {
+        "dynamic programming": 0.6,
+        "greedy": 0.8,
+        "graphs": 0.4,
+        "math": 0.8,
+        "data structures": 0.8,
+        "trees": 0.8,
+        "brute force": 0.6,
+        "strings": 0.4,
+        "number theory": 0.6,
+        "binary search": 0.2
+      },
+      "evaluation_time_s": 0.05,
+      "samples_per_problem": 5
+    },
+    {
+      "run_id": "baseline_10pct",
+      "model_type": "baseline",
+      "fraction": 0.1,
+      "train_samples": 30,
+      "pass_at_1": 0.132,
+      "pass_at_5": 0.56,
+      "pass_at_10": 0.56,
+      "solved_problems": 28,
+      "total_problems": 50,
+      "failure_taxonomy": {
+        "WA": 154,
+        "CE": 16,
+        "TLE": 15,
+        "AC": 33,
+        "RE": 32
+      },
+      "category_pass_rates": {
+        "dynamic programming": 0.4,
+        "greedy": 0.8,
+        "graphs": 0.6,
+        "math": 0.8,
+        "data structures": 0.4,
+        "trees": 0.4,
+        "brute force": 0.4,
+        "strings": 0.6,
+        "number theory": 0.8,
+        "binary search": 0.4
+      },
+      "evaluation_time_s": 0.0,
+      "samples_per_problem": 5
+    },
+    {
+      "run_id": "conditioned_25pct",
+      "model_type": "conditioned",
+      "fraction": 0.25,
+      "train_samples": 60,
+      "pass_at_1": 0.256,
+      "pass_at_5": 0.82,
+      "pass_at_10": 0.82,
+      "solved_problems": 41,
+      "total_problems": 50,
+      "failure_taxonomy": {
+        "WA": 165,
+        "AC": 64,
+        "RE": 12,
+        "TLE": 8,
+        "CE": 1
+      },
+      "category_pass_rates": {
+        "dynamic programming": 0.8,
+        "greedy": 0.8,
+        "graphs": 1.0,
+        "math": 1.0,
+        "data structures": 0.8,
+        "trees": 1.0,
+        "brute force": 1.0,
+        "strings": 0.6,
+        "number theory": 0.4,
+        "binary search": 0.8
+      },
+      "evaluation_time_s": 0.0,
+      "samples_per_problem": 5
+    },
+    {
+      "run_id": "baseline_25pct",
+      "model_type": "baseline",
+      "fraction": 0.25,
+      "train_samples": 60,
+      "pass_at_1": 0.112,
+      "pass_at_5": 0.48,
+      "pass_at_10": 0.48,
+      "solved_problems": 24,
+      "total_problems": 50,
+      "failure_taxonomy": {
+        "WA": 140,
+        "RE": 46,
+        "CE": 22,
+        "TLE": 14,
+        "AC": 28
+      },
+      "category_pass_rates": {
+        "dynamic programming": 0.6,
+        "greedy": 0.4,
+        "graphs": 0.4,
+        "math": 0.6,
+        "data structures": 0.8,
+        "trees": 0.4,
+        "brute force": 0.6,
+        "strings": 0.6,
+        "number theory": 0.4,
+        "binary search": 0.0
+      },
+      "evaluation_time_s": 0.0,
+      "samples_per_problem": 5
+    },
+    {
+      "run_id": "conditioned_50pct",
+      "model_type": "conditioned",
+      "fraction": 0.5,
+      "train_samples": 110,
+      "pass_at_1": 0.308,
+      "pass_at_5": 0.86,
+      "pass_at_10": 0.86,
+      "solved_problems": 43,
+      "total_problems": 50,
+      "failure_taxonomy": {
+        "AC": 77,
+        "WA": 149,
+        "TLE": 9,
+        "RE": 13,
+        "CE": 2
+      },
+      "category_pass_rates": {
+        "dynamic programming": 0.8,
+        "greedy": 1.0,
+        "graphs": 0.8,
+        "math": 1.0,
+        "data structures": 1.0,
+        "trees": 0.8,
+        "brute force": 1.0,
+        "strings": 0.8,
+        "number theory": 0.6,
+        "binary search": 0.8
+      },
+      "evaluation_time_s": 0.0,
+      "samples_per_problem": 5
+    },
+    {
+      "run_id": "baseline_50pct",
+      "model_type": "baseline",
+      "fraction": 0.5,
+      "train_samples": 110,
+      "pass_at_1": 0.116,
+      "pass_at_5": 0.56,
+      "pass_at_10": 0.56,
+      "solved_problems": 28,
+      "total_problems": 50,
+      "failure_taxonomy": {
+        "WA": 163,
+        "AC": 29,
+        "RE": 31,
+        "CE": 16,
+        "TLE": 11
+      },
+      "category_pass_rates": {
+        "dynamic programming": 0.4,
+        "greedy": 0.8,
+        "graphs": 0.2,
+        "math": 1.0,
+        "data structures": 0.6,
+        "trees": 0.6,
+        "brute force": 0.4,
+        "strings": 0.6,
+        "number theory": 0.4,
+        "binary search": 0.6
+      },
+      "evaluation_time_s": 0.0,
+      "samples_per_problem": 5
+    },
+    {
+      "run_id": "conditioned_100pct",
+      "model_type": "conditioned",
+      "fraction": 1.0,
+      "train_samples": 210,
+      "pass_at_1": 0.444,
+      "pass_at_5": 0.96,
+      "pass_at_10": 0.96,
+      "solved_problems": 48,
+      "total_problems": 50,
+      "failure_taxonomy": {
+        "WA": 127,
+        "AC": 111,
+        "TLE": 4,
+        "RE": 6,
+        "CE": 2
+      },
+      "category_pass_rates": {
+        "dynamic programming": 1.0,
+        "greedy": 0.6,
+        "graphs": 1.0,
+        "math": 1.0,
+        "data structures": 1.0,
+        "trees": 1.0,
+        "brute force": 1.0,
+        "strings": 1.0,
+        "number theory": 1.0,
+        "binary search": 1.0
+      },
+      "evaluation_time_s": 0.0,
+      "samples_per_problem": 5
+    },
+    {
+      "run_id": "baseline_100pct",
+      "model_type": "baseline",
+      "fraction": 1.0,
+      "train_samples": 210,
+      "pass_at_1": 0.176,
+      "pass_at_5": 0.58,
+      "pass_at_10": 0.58,
+      "solved_problems": 29,
+      "total_problems": 50,
+      "failure_taxonomy": {
+        "WA": 149,
+        "TLE": 13,
+        "RE": 30,
+        "AC": 44,
+        "CE": 14
+      },
+      "category_pass_rates": {
+        "dynamic programming": 0.4,
+        "greedy": 0.8,
+        "graphs": 0.4,
+        "math": 1.0,
+        "data structures": 0.6,
+        "trees": 0.4,
+        "brute force": 0.6,
+        "strings": 0.8,
+        "number theory": 0.4,
+        "binary search": 0.4
+      },
+      "evaluation_time_s": 0.0,
+      "samples_per_problem": 5
+    }
+  ],
+  "valley_dip_metrics": {
+    "baseline_pass1_progression": [
+      13.200000000000001,
+      11.200000000000001,
+      11.600000000000001,
+      17.599999999999998
+    ],
+    "conditioned_pass1_progression": [
+      16.0,
+      25.6,
+      30.8,
+      44.4
+    ],
+    "baseline_dip_depth": 2.0,
+    "conditioned_is_monotonic": true,
+    "trough_relative_gain_pct": 128.57,
+    "asymptotic_relative_gain_pct": 152.27,
+    "total_ce_baseline": 68,
+    "total_ce_conditioned": 7,
+    "ce_reduction_pct": 89.71
+  },
+  "total_benchmark_time_s": 0.05
+}

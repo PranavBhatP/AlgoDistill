@@ -235,3 +235,12 @@ class SandboxJudge:
                     os.remove(script_path)
                 except OSError:
                     pass
+
+
+if __name__ == "__main__":
+    judge = SandboxJudge(default_timeout_s=2.0, max_memory_mb=512)
+    sample_code = "import sys\na, b = map(int, sys.stdin.read().split())\nprint(a + b)\n"
+    sample_tests = [{"input_data": "15 27\n", "output_data": "42\n"}]
+    res = judge.evaluate_python_solution(sample_code, sample_tests)
+    print(f"Direct Sandbox Run: Verdict={res.verdict.value}, Passed={res.tests_passed}/{res.total_tests}, MaxRuntime={res.max_runtime_ms:.1f}ms")
+

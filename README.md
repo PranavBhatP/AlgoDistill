@@ -1,7 +1,7 @@
 # QLoRA Distillation for Algorithmic Code Classification and Generation
 
 **Author:** Pranav Bhat P (Roll No: 231IT049)  
-**Collaborators:** Himanshu Mehar (231IT027), Shivam Kumar (231IT069)  
+**Collaborators:** Himanshu Mehar (231IT027), Shivam Kumar (231IT068)  
 **Course:** IT488 Course Project  
 **Repository:** [AlgoDistill](https://github.com/PranavBhatP/AlgoDistill)  
 **Target Paper:** *Decoupled Algorithmic-Category Conditioning and Multi-Turn Diagnostic Self-Repair for Robust Code Distillation*

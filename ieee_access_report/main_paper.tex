@@ -19,8 +19,8 @@
 \title{QLoRA Distillation for Algorithmic Code Reasoning: Addressing the ``Valley of Code Reasoning'' via Decoupled Algorithmic Conditioning}
 
 \author{\uppercase{Pranav Bhat P}, \uppercase{Shivam Kumar}, and \uppercase{Himanshu Mehar}}
-\markboth{Bhat \headeretal: QLoRA Distillation for Algorithmic Code Reasoning}
-{Bhat \headeretal: QLoRA Distillation for Algorithmic Code Reasoning}
+\markboth{}{}
+
 
 \begin{abstract}
 Small Language Models ($\le 1.5$B parameters) fine-tuned on Chain-of-Thought (CoT) code data exhibit a severe non-monotonic degradation in functional correctness at intermediate training data scales, an empirical pathology termed the ``Valley of Code Reasoning'' (He et al., 2025). This collapse stems from token entanglement: monolithic models must simultaneously select abstract algorithmic strategies and emit low-level syntax within a single autoregressive sequence. To address this limitation, we propose a decoupled System-2 knowledge distillation framework that separates algorithmic commitment from code synthesis. Our architecture integrates: (1) an isolated POSIX subprocess sandbox judge with strict memory and CPU enforcement; (2) a semantic rationale-consistency filter purging hallucinated teacher supervision ($91.0\%\text{--}94.0\%$ retention); (3) a Stage~1 QLoRA classifier committing to a 10-class algorithmic taxonomy; and (4) a Stage~2 tag-conditioned code generator coupled with iterative diagnostic execution self-repair. Across an 8-run empirical scaling sweep ($10\%$, $25\%$, $50\%$, $100\%$) on 300 curated TACO benchmark problems using consumer-grade hardware (Tesla T4 / RTX 3050), decoupled conditioning completely eliminates the reasoning dip, yielding a $+128.6\%$ relative Pass@1 gain at the trough, an $89.7\%$ reduction in compilation errors, and a $4\times$ improvement through multi-turn repair on Qwen2.5-Coder-1.5B.
